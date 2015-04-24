@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 BOARD=$1
 TODAY=$(date +"%y%m%d")
@@ -16,6 +16,12 @@ fi
 
 if [ ! -d rock-bsp/.git ]; then
 	git clone git@github.com:radxa/rock-bsp.git
+fi
+
+if [ "local" = $2 ]; then
+	cat ../bootstrap_local > radxa-lb/${BOARD}/bootstrap
+	echo "deb http://172.168.1.3/apt.radxa.us/rabian-stable/ jessie main" > radxa-lb/${BOARD}/archives/apt-radxa-us.list
+
 fi
 
 cd radxa-lb && make clean && make $BOARD && cd -
