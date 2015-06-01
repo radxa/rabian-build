@@ -46,6 +46,7 @@ echo "BOARD_ROOTFS=${IMAGE}" >> rock-bsp/configs/${BOARD}_config
 
 cd rock-bsp && ./config.sh $BOARD && make && mv boards/${BOARD}/rockdev ${OUT}/${BOARD}/${TODAY}/ && cd -
 
-IMAGE_NAME="`basename ${OUT}/${BOARD}/${TODAY}/rockdev/${BOARD}_*.img`"
-
-cd ${OUT}/${BOARD}/${TODAY}/rockdev && tar Jcvf ${IMAGE_NAME}.tar.xz ${IMAGE_NAME} && cd -
+if [ ! -z ${OUT} ]; then
+	IMAGE_NAME="`basename ${OUT}/${BOARD}/${TODAY}/rockdev/${BOARD}_*.img`"
+	cd ${OUT}/${BOARD}/${TODAY}/rockdev && tar Jcvf ${IMAGE_NAME}.tar.xz ${IMAGE_NAME} && cd -
+fi
