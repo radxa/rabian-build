@@ -28,17 +28,17 @@ if [ ! -d rock-bsp/.git ]; then
 fi
 
 if [ -e ../.local ]; then
-	cp -vf ../bootstrap_local radxa-lb/${BOARD}/bootstrap
-	cp -vf ../apt-radxa-us.list.local radxa-lb/${BOARD}/archives/apt-radxa-us.list
+	cp -vf ../bootstrap_local radxa-lb/common_config/bootstrap
+	cp -Rf ../apt-radxa-us.list.local radxa-lb/common_config/archives/apt-radxa-us.list
 	cp -vf ../defconfig_local rock-bsp/configs/defconfig
 	cp -vf ../${BOARD}_config_local rock-bsp/configs/${BOARD}_config
 fi
 
-if [ ! -e radxa-lb/.${BOARD}_lb_done ]; then
-	cd radxa-lb && make clean && make $BOARD && touch ./.${BOARD}_lb_done && cd -
+if [ ! -e radxa-lb/.${BOARD%_sdcard*}_lb_done ]; then
+	cd radxa-lb && make ${BOARD%_sdcard*} && touch ./.${BOARD%_sdcard*}_lb_done && cd -
 fi
 
-IMAGE=$(basename radxa-lb/rabian_${BOARD}_*.ext4)
+IMAGE=$(basename radxa-lb/rabian_${BOARD%_sdcard*}_*.ext4)
 
 cp -vf radxa-lb/$IMAGE rock-bsp/rootfs/
 
