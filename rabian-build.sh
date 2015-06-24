@@ -1,6 +1,8 @@
 #!/bin/sh -e
 
-BOARD=$1
+BOARD_IMG=$1
+DELETE_STRING=${BOARD_IMG%_sdcard*}
+TARGET_BOARD=${DELETE_STRING%_lvds*}
 OUT=$2
 
 TODAY=$(date +"%y%m%d")
@@ -8,13 +10,13 @@ TODAY=$(date +"%y%m%d")
 LB_URL="https://github.com/radxa/radxa-lb.git"
 BSP_URL="https://github.com/radxa/rock-bsp.git"
 
-if [ -z ${BOARD} ]; then
+if [ -z ${BOARD_IMG} ]; then
 	echo "$0 board [output]"
 	exit 1
 fi
 
 if [ ! -z ${OUT} ]; then
-	mkdir -p ${OUT}/${BOARD}/${TODAY}
+	mkdir -p ${OUT}/${BOARD_IMG}/${TODAY}
 fi
 
 mkdir -p ${TODAY} && cd ${TODAY}
@@ -31,22 +33,22 @@ if [ -e ../.local ]; then
 	cp -vf ../bootstrap_local radxa-lb/common_config/bootstrap
 	cp -Rf ../apt-radxa-us.list.local radxa-lb/common_config/archives/apt-radxa-us.list
 	cp -vf ../defconfig_local rock-bsp/configs/defconfig
-	cp -vf ../${BOARD}_config_local rock-bsp/configs/${BOARD}_config
+	cp -vf ../${BOARD_IMG}_config_local rock-bsp/configs/${BOARD_IMG}_config
 fi
 
-if [ ! -e radxa-lb/.${BOARD%_sdcard*}_lb_done ]; then
-	cd radxa-lb && make ${BOARD%_sdcard*} && touch ./.${BOARD%_sdcard*}_lb_done && cd -
+if [ ! -e radxa-lb/.${TARGET_BOARD}_lb_done ]; then
+	cd radxa-lb && make ${TARGET_BOARD} && touch ./.${TARGET_BOARD}_lb_done && cd -
 fi
 
-IMAGE=$(basename radxa-lb/rabian_${BOARD%_sdcard*}_*.ext4)
+IMAGE=$(basename radxa-lb/rabian_${TARGET_BOARD}_*.ext4)
 
 cp -vf radxa-lb/$IMAGE rock-bsp/rootfs/
 
-echo "BOARD_ROOTFS=${IMAGE}" >> rock-bsp/configs/${BOARD}_config
+echo "BOARD_ROOTFS=${IMAGE}" >> rock-bsp/configs/${BOARD_IMG}_config
 
-cd rock-bsp && ./config.sh $BOARD && make && mv boards/${BOARD}/rockdev ${OUT}/${BOARD}/${TODAY}/ && cd -
+cd rock-bsp && ./config.sh $BOARD_IMG && make && mv boards/${BOARD_IMG}/rockdev ${OUT}/${BOARD_IMG}/${TODAY}/ && cd -
 
 if [ ! -z ${OUT} ]; then
-	IMAGE_NAME="`basename ${OUT}/${BOARD}/${TODAY}/rockdev/${BOARD}_*.img`"
-	cd ${OUT}/${BOARD}/${TODAY}/rockdev && tar Jcvf ${IMAGE_NAME}.tar.xz ${IMAGE_NAME} && cd -
+	IMAGE_NAME="`basename ${OUT}/${BOARD_IMG}/${TODAY}/rockdev/${BOARD_IMG}_*.img`"
+	cd ${OUT}/${BOARD_IMG}/${TODAY}/rockdev && tar Jcvf ${IMAGE_NAME}.tar.xz ${IMAGE_NAME} && cd -
 fi
