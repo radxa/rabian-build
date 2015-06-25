@@ -40,9 +40,7 @@ if [ ! -e radxa-lb/.${TARGET_BOARD}_lb_done ]; then
 	cd radxa-lb && make ${TARGET_BOARD} && touch ./.${TARGET_BOARD}_lb_done && cd -
 fi
 
-IMAGE=$(basename radxa-lb/rabian_${TARGET_BOARD}_*.ext4)
-
-cp -vf radxa-lb/$IMAGE rock-bsp/rootfs/
+cp -vf radxa-lb/rabian_${TARGET_BOARD}.ext4 rock-bsp/rootfs/
 
 echo "BOARD_ROOTFS=${IMAGE}" >> rock-bsp/configs/${BOARD_IMG}_config
 
