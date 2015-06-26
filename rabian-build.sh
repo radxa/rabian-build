@@ -42,7 +42,7 @@ fi
 
 cp -vf radxa-lb/rabian_${TARGET_BOARD}.ext4 rock-bsp/rootfs/
 
-echo "BOARD_ROOTFS=${IMAGE}" >> rock-bsp/configs/${BOARD_IMG}_config
+echo "BOARD_ROOTFS=rabian_${TARGET_BOARD}.ext4" >> rock-bsp/configs/${BOARD_IMG}_config
 
 cd rock-bsp && ./config.sh $BOARD_IMG && make && mv boards/${BOARD_IMG}/rockdev ${OUT}/${BOARD_IMG}/${TODAY}/ && cd -
 
