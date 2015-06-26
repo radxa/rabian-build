@@ -48,5 +48,5 @@ cd rock-bsp && ./config.sh $BOARD_IMG && make && mv boards/${BOARD_IMG}/rockdev 
 
 if [ ! -z ${OUT} ]; then
 	IMAGE_NAME="`basename ${OUT}/${BOARD_IMG}/${TODAY}/rockdev/${BOARD_IMG}_*.img`"
-	cd ${OUT}/${BOARD_IMG}/${TODAY}/rockdev && tar Jcvf ${IMAGE_NAME}.tar.xz ${IMAGE_NAME} && cd -
+	cd ${OUT}/${BOARD_IMG}/${TODAY}/rockdev && xz -z ${IMAGE_NAME} && cd -
 fi
