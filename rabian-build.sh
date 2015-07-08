@@ -37,7 +37,7 @@ if [ -e ../.local ]; then
 fi
 
 if [ ! -e radxa-lb/.${TARGET_BOARD}_lb_done ]; then
-	cd radxa-lb && make ${TARGET_BOARD} && touch ./.${TARGET_BOARD}_lb_done && cd -
+	cd radxa-lb && make clean && make ${TARGET_BOARD} && touch ./.${TARGET_BOARD}_lb_done && cd -
 fi
 
 cp -vf radxa-lb/rabian_${TARGET_BOARD}.ext4 rock-bsp/rootfs/
